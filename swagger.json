@@ -1,0 +1,938 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API de Gerenciamento de Projetos",
+      "version": "1.0.0",
+      "description": "Documentação da API de Gerenciamento de Projetos"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8081",
+        "description": "Rota base para a API"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Pessoas",
+        "description": "Rotas pertinentes a manutenção de pessoas"
+      },
+      {
+        "name": "Projetos",
+        "description": "Rotas pertinentes a manutenção de projetos"
+      },
+      {
+        "name": "Candidatos",
+        "description": "Rotas pertinentes a manutenção de candidaturas"
+      }
+    ],
+    "paths": {
+      "/api/pessoas": {
+        "get": {
+          "tags": [
+            "Pessoas"
+          ],
+          "summary": "Busca todas as pessoas cadastradas (Necessita privilégio de administrador).",
+          "description": "Retorna lista completa de pessoas cadastradas (Necessita privilégio de administrador).",
+          "operationId": "getPessoas",
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Pessoa"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/pessoa/{Id}": {
+        "get": {
+          "tags": [
+            "Pessoas"
+          ],
+          "summary": "Busca pessoa pelo Id",
+          "description": "Retorna uma única pessoa (Necessita privilégio de administrador).",
+          "operationId": "getPessoaById",
+          "parameters": [
+            {
+              "name": "Id",
+              "in": "path",
+              "description": "ID da pessoa a ser retornada.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pessoa"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Pessoa não encontrada"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/cadastrarPessoa": {
+        "post": {
+          "tags": [
+            "Pessoas"
+          ],
+          "summary": "Cria um cadastro de pessoa",
+          "description": "Cria um cadastro de pessoa (Necessita privilégio de administrador).",
+          "operationId": "postPessoa",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pessoa"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Criado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/Pessoa"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "token": {
+                            "type": "string",
+                            "example": "zI1NiI5cCI6IkpXVCJ9.IjoiQ0FRElEQVRpYXQiOjE2ODU5MTg1OTI1OTcwLCM2ODU5NzB9.bhqomndFXsNPPEdtE"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/editarPessoa/{Id}": {
+        "put": {
+          "tags": [
+            "Pessoas"
+          ],
+          "summary": "Atualiza um cadastro de pessoa",
+          "description": "Atualiza os dados de um cadastro de pessoa pelo Id (Necessita privilégio de administrador).",
+          "operationId": "putPessoa",
+          "parameters": [
+            {
+              "name": "Id",
+              "in": "path",
+              "description": "ID da pessoa a ser atualizada.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pessoa"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pessoa"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Pessoa não encontrada"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/deletarPessoa/{Id}": {
+        "delete": {
+          "tags": [
+            "Pessoas"
+          ],
+          "summary": "Elimina pessoa pelo Id",
+          "description": "Elimina um registro de pessoa pelo Id (Necessita privilégio de administrador).",
+          "operationId": "deletePessoa",
+          "parameters": [
+            {
+              "name": "Id",
+              "in": "path",
+              "description": "ID da pessoa a ser eliminada.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Eliminado"
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Pessoa não encontrada"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/projetos": {
+        "get": {
+          "tags": [
+            "Projetos"
+          ],
+          "summary": "Busca todas os projetos cadastrados",
+          "description": "Retorna lista completa de projetos cadastrados",
+          "operationId": "getProjetos",
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Projeto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/projeto/{Id}": {
+        "get": {
+          "tags": [
+            "Projetos"
+          ],
+          "summary": "Busca projeto pelo Id",
+          "description": "Retorna um único projeto (Necessita privilégio de responsável).",
+          "operationId": "getProjetoById",
+          "parameters": [
+            {
+              "name": "Id",
+              "in": "path",
+              "description": "ID do projeto a ser retornado.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Projeto"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Projeto não encontrado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/cadastrarProjeto": {
+        "post": {
+          "tags": [
+            "Projetos"
+          ],
+          "summary": "Cria um cadastro de projeto",
+          "description": "Cria um cadastro de projeto (Necessita privilégio de responsável).",
+          "operationId": "postProjeto",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projeto"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Criado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Projeto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na solicitação"
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/editarProjeto/{Id}": {
+        "put": {
+          "tags": [
+            "Projetos"
+          ],
+          "summary": "Atualiza um cadastro de projeto",
+          "description": "Atualiza os dados de um projeto pelo Id (Necessita ser o responsável pelo projeto).",
+          "operationId": "putProjeto",
+          "parameters": [
+            {
+              "name": "Id",
+              "in": "path",
+              "description": "ID do projeto a ser atualizado.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projeto"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Projeto"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro na solicitação"
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Projeto não encontrado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/deletarProjeto/{Id}": {
+        "delete": {
+          "tags": [
+            "Projetos"
+          ],
+          "summary": "Elimina projeto pelo Id",
+          "description": "Elimina um registro de projeto pelo Id (Necessita ser o responsável pelo projeto).",
+          "operationId": "deleteProjeto",
+          "parameters": [
+            {
+              "name": "Id",
+              "in": "path",
+              "description": "ID do projeto a ser eliminado.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Eliminado"
+            },
+            "400": {
+              "description": "Erro na solicitação"
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Projeto não encontrado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/candidatos": {
+        "get": {
+          "tags": [
+            "Candidatos"
+          ],
+          "summary": "Busca todas os candidatos cadastrados.",
+          "description": "Retorna lista completa de candidatos cadastrados (Necessita privilégio de administrador).",
+          "operationId": "getCandidatos",
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Pessoa"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/candidatosInteressados": {
+        "get": {
+          "tags": [
+            "Candidatos"
+          ],
+          "summary": "Busca todas os candidatos interessados em projetos.",
+          "description": "Retorna lista de todos os candidatos interessados nos projetos do responsável.",
+          "operationId": "getProjetosCandidaturas",
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "projeto": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "example": "647d16381f6805f6d710128a"
+                            },
+                            "nome": {
+                              "type": "string",
+                              "example": "Projeto 1"
+                            },
+                            "descricao": {
+                              "type": "string",
+                              "example": "Descricao simples do projeto"
+                            }
+                          }
+                        },
+                        "candidatos": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "647d16381f6805f6d710128a"
+                              },
+                              "nome": {
+                                "type": "string",
+                                "example": "Candidato 1"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/candidatar": {
+        "post": {
+          "tags": [
+            "Candidatos"
+          ],
+          "summary": "Cria uma candidatura a um projeto",
+          "description": "Cria candidatura a um projeto (Necessita privilégio de candidato).",
+          "operationId": "postProjetoCandidato",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projeto": {
+                      "type": "string",
+                      "example": "647d16381f6805f6d710128a"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Criado"
+            },
+            "400": {
+              "description": "Erro na solicitação"
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Projeto não encontrado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/removercandidatura/{idProjeto}": {
+        "delete": {
+          "tags": [
+            "Candidatos"
+          ],
+          "summary": "Elimina candidatura a um projeto",
+          "description": "Elimina a candidatura a um projeto (Necessita privilégio de candidato).",
+          "operationId": "deleteProjetoCandidato",
+          "parameters": [
+            {
+              "name": "idProjeto",
+              "in": "path",
+              "description": "ID do projeto remover a candidatura",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK - Eliminado"
+            },
+            "400": {
+              "description": "Erro na solicitação"
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Candidatura ou projeto não encontrado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/selecionaCandidato": {
+        "post": {
+          "tags": [
+            "Candidatos"
+          ],
+          "summary": "Seleciona um candidato a um projeto",
+          "description": "Seleciona a candidatura a um projeto (Necessita ser o responsável pelo projeto).",
+          "operationId": "postProjetoCandidatoSelecionar",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projetoId": {
+                      "type": "string",
+                      "example": "647d16381f6805f6d710128a"
+                    },
+                    "candidatoId": {
+                      "type": "string",
+                      "example": "647d30526ba74d90b5a905bf"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Criado"
+            },
+            "400": {
+              "description": "Erro na solicitação"
+            },
+            "401": {
+              "description": "Token de autenticação não informado ou inválido"
+            },
+            "403": {
+              "description": "Acesso não autorizado"
+            },
+            "404": {
+              "description": "Projeto ou candidato não encontrado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          },
+          "security": [
+            {
+              "token_acesso": []
+            }
+          ]
+        }
+      },
+      "/api/candidatosSelecionados/{idProjeto}": {
+        "get": {
+          "tags": [
+            "Candidatos"
+          ],
+          "summary": "Busca todas os candidatos interessados em projetos.",
+          "description": "Retorna lista de todos os candidatos interessados nos projetos do responsável.",
+          "operationId": "getProjetoCandidatosSelecionados",
+          "parameters": [
+            {
+              "name": "idProjeto",
+              "in": "path",
+              "description": "ID do projeto a ser consultado.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "projeto": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "647d16381f6805f6d710128a"
+                          },
+                          "descricao": {
+                            "type": "string",
+                            "example": "Descricao simples do projeto"
+                          },
+                          "candidatosSelecionados": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "example": "647d30526ba74d90b5a905bf"
+                                },
+                                "nome": {
+                                  "type": "string",
+                                  "example": "Candidato 1"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Projeto não encontrado"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Pessoa": {
+          "required": [
+            "nome",
+            "idade",
+            "cpf",
+            "email",
+            "role"
+          ],
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "readOnly": true,
+              "example": "647d30526ba74d90b5a905bf"
+            },
+            "nome": {
+              "type": "string",
+              "example": "Candidato 1"
+            },
+            "idade": {
+              "type": "integer",
+              "example": 20
+            },
+            "cpf": {
+              "type": "string",
+              "example": 99999999999
+            },
+            "email": {
+              "type": "string",
+              "example": "cand@email.com"
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "ADMIN",
+                "RESPONSAVEL",
+                "CANDIDATO"
+              ],
+              "example": "CANDIDATO"
+            }
+          }
+        },
+        "Projeto": {
+          "required": [
+            "nome",
+            "descricao",
+            "anoInicio",
+            "anoFim"
+          ],
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "readOnly": true,
+              "example": "647d16381f6805f6d710128a"
+            },
+            "nome": {
+              "type": "string",
+              "example": "Projeto 1"
+            },
+            "descricao": {
+              "type": "string",
+              "example": "Descricao simples do projeto"
+            },
+            "anoInicio": {
+              "type": "integer",
+              "example": 2021
+            },
+            "anoFim": {
+              "type": "integer",
+              "example": 2022
+            },
+            "responsavel": {
+              "type": "string",
+              "readOnly": true,
+              "example": "647d082ac5f65af720af2c23"
+            },
+            "popularidade": {
+              "type": "integer",
+              "readOnly": true,
+              "example": 0
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "token_acesso": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
